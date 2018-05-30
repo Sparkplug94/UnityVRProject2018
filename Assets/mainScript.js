@@ -26,13 +26,15 @@ function Start(){
 	rows = 8;
 	cols = 8;
 	numberOfCubes = rows*cols;
-	mineFreq = 0.5;
+	mineFreq = 0.2;
 
 	//make the cubes
 	for (var ii = 0; ii < rows; ii++){
 		for (var jj = 0; jj < cols; jj++){
 			cubes.Add(Instantiate(Resources.Load("FlagCube")));
 			cubes[ii*rows+jj].transform.position = Vector3(2*ii,0,2*jj);
+
+			//should probably make these an array...
 			var textObject = cubes[ii*rows+jj].transform.GetChild(0);
 			var poleObject = cubes[ii*rows+jj].transform.GetChild(1);
 			var flagObject = poleObject.transform.GetChild(0);
@@ -56,22 +58,8 @@ function Start(){
 	
 
 
-
-
-	//make the mines - make this into a function - 1 indicates that this box holds a mine
-	var mineGrid = new int[rows, cols];
-	for (var i = 0; i < rows; i++) {
-		for (var j = 0; j < cols; j++){
-			var seed = Random.Range(0.0f, 1.0f);
-			if (seed < mineFreq) {
-				mineGrid[i,j] = 1;
-			} 
-			else {
-				mineGrid[i,j] = 0;
-			}
-		}
-	}
-
+	//make the mines - 1 indicates that this box holds a mine
+	var mineGrid = makeMineGrid(rows,cols,mineFreq);
 
 	//Do the nearest neighbor search - make this into a function - these are the displayed numbers on the boxes
 	var numGrid = new int[rows, cols];
@@ -147,7 +135,30 @@ function Update(){
 	
 }
 
+function makeMineGrid(numRows : int, numCols : int, mineFrequency : float){
+	var grid = new int[numRows, numCols];
 
+	for (var i = 0; i < numRows; i++) {
+		for (var j = 0; j < numCols; j++){
+			var seed = Random.Range(0.0f, 1.0f);
+			if (seed < mineFrequency) {
+				grid[i,j] = 1;
+				Debug.Log(i.ToString()+","+j.ToString()+" mined");
+			} 
+			else {
+				grid[i,j] = 0;
+				Debug.Log(i.ToString()+","+j.ToString()+" not mined");
+			}
+		}
+	}
+
+	return grid;
+
+}
+
+function makeNumGrid(){
+	
+}
 
 
 
