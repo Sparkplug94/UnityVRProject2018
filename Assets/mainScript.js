@@ -14,7 +14,7 @@ var objects = new List.<GameObject>();
 var rows : int;
 var cols : int;
 var mineFreq : float;
-var numberOfCubes : int = 10;
+var numberOfCubes : int = 3;
 
 //this is a C# style "array", use "Count" instead of "Length" and 
 //you can't access an array element until you've created it 
