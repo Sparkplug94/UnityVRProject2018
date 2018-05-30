@@ -21,11 +21,17 @@ var numberOfCubes : int = 3;
 
 
 function Start(){
+	//add flagcubes to objects array
 	makeCubes();
+	//get children of things in objects array
 	var flagtextobject = objects[0].transform.GetChild(0);
+	//get the meshrenderer component of the first child of objects[0]
 	var mr = flagtextobject.GetComponent(MeshRenderer);
+	//enable or disable the renderer (hide and show text)
 	mr.enabled = true;
+	//get the textmesh component of first child of objects[0] which happens to be the "Text" object
 	var flagtext = flagtextobject.GetComponent(TextMesh);
+	//change the text property of TextMesh to "byebye"
 	flagtext.text = "byebye";
 
 
@@ -113,7 +119,7 @@ function Start(){
 }
 
 function Update(){
-	//go.GetComponent(Rigidbody).velocity = Vector3(1,0,0);
+	//some object blah blah.GetComponent(Rigidbody).velocity = Vector3(1,0,0);
 	
 }
 
