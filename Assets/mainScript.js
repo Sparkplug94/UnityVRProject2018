@@ -58,7 +58,7 @@ function Start(){
 
 
 
-	//make the mines - make this into a function
+	//make the mines - make this into a function - 1 indicates that this box holds a mine
 	var mineGrid = new int[rows, cols];
 	for (var i = 0; i < rows; i++) {
 		for (var j = 0; j < cols; j++){
@@ -73,7 +73,7 @@ function Start(){
 	}
 
 
-	//Do the nearest neighbor search - make this into a function
+	//Do the nearest neighbor search - make this into a function - these are the displayed numbers on the boxes
 	var numGrid = new int[rows, cols];
 	for (var m = 0; m < rows; m++) {
 		for (var n = 0; n < cols; n++){
@@ -133,8 +133,9 @@ function Start(){
 	}
 
 
-	//now we have mine grids and a number grid
-
+	//make the flag grid - 1 indicates that box is flagged
+	var flagGrid = new int[rows, cols];
+	//zeros for now
 
 	
 
