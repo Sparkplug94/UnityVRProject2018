@@ -26,7 +26,7 @@ GameObject:
   - component: {fileID: 114003796773983706}
   - component: {fileID: 114170434376809670}
   m_Layer: 0
-  m_Name: New Prefab
+  m_Name: CapsuleWithAddedStudd
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
