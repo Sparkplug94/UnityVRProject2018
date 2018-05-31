@@ -53,6 +53,8 @@ function Start(){
 function Update(){
 	//some object blah blah.GetComponent(Rigidbody).velocity = Vector3(1,0,0);
 	
+	isSolved(rows, cols, mineGrid, flagGrid);
+
 	var ray : Ray = Camera.main.ScreenPointToRay(Input.mousePosition);
  	var hit : RaycastHit;
  	var index : int;
@@ -60,9 +62,7 @@ function Update(){
  	var jpos : int;
  	var selectedObject : GameObject;
 
- 	if(mineGrid == flagGrid){
- 		Debug.Log("You win!");
- 	}
+ 	
 
  	if(Physics.Raycast(ray, hit)){
 
@@ -97,7 +97,7 @@ function Update(){
       			if(mineGrid[ipos,jpos] == 1){
 	 				Debug.Log("Kaboom");
 	 				//explosion
-	 				Debug.Log(selectedObject.transform.position);
+	 				//Debug.Log(selectedObject.transform.position);
 	 				//destroy the cube
 	 				Destroy(selectedObject);
 	 				//create a bunch of mini cubes at that position
@@ -239,6 +239,19 @@ function initCubes(numRows : int, numCols : int, scale : float){
 			poleObject.GetComponent(MeshRenderer).enabled = false;
 		}
 	}
+}
+
+function isSolved(numRows : int, numCols : int, mines : int[,], flags : int[,]){
+
+	for (var i = 0; i < numRows; i++){
+		for (var j = 0; j < numRows; j++){
+			if(mines[i,j] != flags [i,j]){
+				return false;
+			} 
+		}
+	}
+	Debug.Log("You win!");
+	return true;
 }
 
 
