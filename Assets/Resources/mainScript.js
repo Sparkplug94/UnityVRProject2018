@@ -63,75 +63,72 @@ function Update(){
  	if(Physics.Raycast(ray, hit)){
 
       	selectedObject = GameObject.Find(hit.transform.name);
-      	
-      	try{
+
+      	//check to see if the raycast hits a cube or not
+      	if(selectedObject.transform.name == "Plane"){
+      		//Debug.Log("plane");
+      		index = -1;
+      		ipos = -1;
+      		jpos = -1;
+      	}
+      	//regex match names of objects that are integers only
+      	else if(Regex.IsMatch(selectedObject.transform.name,"^[-+]?\\d+$"))
+      	{
+      		//Debug.Log("name is an integer of some kind");
       		index =  System.Convert.ToInt16(hit.transform.name);
       		jpos = index % rows;
       		ipos = (index - jpos)/rows;
-      		
       	}
-      	catch(err){
+      	else{
+      		//Debug.Log("not an object we care about");
       		index = -1;
+      		ipos = -1;
+      		jpos = -1;
       	}
-      		//functionality on left click - display text or explode
-	      	if(Input.GetMouseButtonDown(0)){
+      	
 
-	 			if(mineGrid[ipos,jpos] == 1){
-	 				//if it's a mine, explode
+      	if(Input.GetMouseButtonDown(0)){
+      		if(index != -1){
+      			//if it's a mine
+      			if(mineGrid[ipos,jpos] == 1){
 	 				Debug.Log("Kaboom");
 	 				//explosion
 	 				Debug.Log(selectedObject.transform.position);
+	 				//destroy the cube
 	 				Destroy(selectedObject);
+	 				//create a bunch of mini cubes at that position
 	 				for (var f = 0; f < 40; f++) {
 	 					explosionCubes.Add(Instantiate(Resources.Load("ExplosionCube")));
 	 					explosionCubes[f].transform.position = selectedObject.transform.position;
 	 				}
-	 				
 	 			}
 	 			else{
-	 				//if not, replace text on box with number in numgrid
-	 				if(index != -1){
-	 					cubes[index].transform.GetChild(0).GetComponent(TextMesh).text = numGrid[ipos,jpos].ToString();
-	 				}
-
+	 				//display the appropriate number frmo the numGrid
+	 				cubes[index].transform.GetChild(0).GetComponent(TextMesh).text = numGrid[ipos,jpos].ToString();
 	 			}
-
-			}
-			//functionality on right click - flag or unflag box
-			else if(Input.GetMouseButtonDown(1)){
-	 			try{
-
-	 				var pole = selectedObject.transform.GetChild(1).GetComponent(MeshRenderer);
-	 				var flag = selectedObject.transform.GetChild(1).GetChild(0).GetComponent(MeshRenderer);
-	 				
-	 				if(pole.enabled == false){
+      		}
+      	}
+      	if(Input.GetMouseButtonDown(1)){
+      		if(index != -1){
+      			var pole = selectedObject.transform.GetChild(1).GetComponent(MeshRenderer);
+	 			var flag = selectedObject.transform.GetChild(1).GetChild(0).GetComponent(MeshRenderer);
+	 			if(pole.enabled == false){
 	 					pole.enabled = true;
 	 					flag.enabled = true;
-	 					if(index != -1){
-	 						//change value in flag grid
-	 						flagGrid[ipos,jpos] = 1;
-	 					}
-	 				}
-	 				else if(pole.enabled == true){
+	 					flagGrid[ipos,jpos] = 1;
+	 					
+	 			}
+	 			else if(pole.enabled == true){
 	 					pole.enabled = false;
 	 					flag.enabled = false;
-	 					if(index != -1){
-	 						//change value in flag grid
-	 						flagGrid[ipos,jpos] = 0;
-	 					}
-	 				}
-	 				else{
-
-	 				}
+	 					flagGrid[ipos,jpos] = 0;
 	 			}
-	 			catch(err){
-	 			}
+	 			else{
 
-			}
-			else{
-
-			}
-	 }
+ 				}
+      		}
+      	}
+	}
 }
 
 
@@ -226,6 +223,7 @@ function initCubes(numRows : int, numCols : int, scale : float){
 			cubes.Add(Instantiate(Resources.Load("FlagCube")));
 			var index : int = ii*rows+jj;
 			cubes[index].transform.position = Vector3(scale*ii,0,scale*jj);
+			//set the name of the cube to its index
 			cubes[index].transform.name = index.ToString();
 			//should probably init these an array...
 			var textObject = cubes[index].transform.GetChild(0);
