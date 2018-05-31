@@ -78,13 +78,24 @@ function Update(){
 
  			Debug.Log(hit.transform.name+" Right Click");
  			try{
- 				//enable pole
- 				selectedObject.transform.GetChild(1).GetComponent(MeshRenderer).enabled = true;
- 				//enable flag
- 				selectedObject.transform.GetChild(1).GetChild(0).GetComponent(MeshRenderer).enabled = true;
+ 				
+ 				var pole = selectedObject.transform.GetChild(1).GetComponent(MeshRenderer);
+ 				var flag = selectedObject.transform.GetChild(1).GetChild(0).GetComponent(MeshRenderer);
+ 				
+ 				if(pole.enabled == false){
+ 					pole.enabled = true;
+ 					flag.enabled = true;
+ 				}
+ 				else if(pole.enabled == true){
+ 					pole.enabled = false;
+ 					flag.enabled = false;
+ 				}
+ 				else{
+
+ 				}
  			}
  			catch(err){
- 				Debug.Log("Not a Cube");
+ 				Debug.Log("Not a Cube"+err);
  			}
 
 		}
@@ -93,6 +104,8 @@ function Update(){
 		}
 	 }
 }
+
+
 
 function initMineGrid(numRows : int, numCols : int, mineFrequency : float){
 	var grid = new int[numRows, numCols];
