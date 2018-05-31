@@ -14,6 +14,7 @@ var cubes = new List.<GameObject>();
 var rows : int;
 var cols : int;
 var mineFreq : float;
+var scale : float;
 var numberOfCubes : int;
 
 //this is a C# style "array", use "Count" instead of "Length" and 
@@ -26,24 +27,12 @@ function Start(){
 	rows = 8;
 	cols = 8;
 	numberOfCubes = rows*cols;
+	scale = 3.0;
 	mineFreq = 0.2;
 
-	//make the cubes
-	for (var ii = 0; ii < rows; ii++){
-		for (var jj = 0; jj < cols; jj++){
-			cubes.Add(Instantiate(Resources.Load("FlagCube")));
-			cubes[ii*rows+jj].transform.position = Vector3(2*ii,0,2*jj);
+	//init the cubes
+	initCubes(rows, cols, scale);
 
-			//should probably make these an array...
-			var textObject = cubes[ii*rows+jj].transform.GetChild(0);
-			var poleObject = cubes[ii*rows+jj].transform.GetChild(1);
-			var flagObject = poleObject.transform.GetChild(0);
-			//set texts to index
-			textObject.GetComponent(TextMesh).text = ii.ToString()+","+jj.ToString();
-			flagObject.GetComponent(MeshRenderer).enabled = false;
-			poleObject.GetComponent(MeshRenderer).enabled = false;
-		}
-	}
 
 	//get children of things in cubes array
 	//var flagtextobject = cubes[0].transform.GetChild(0);
@@ -57,16 +46,50 @@ function Start(){
 	//flagtext.text = "byebye";
 	
 
+	//init the mines - 1 indicates that this box holds a mine
+	var mineGrid = initMineGrid(rows,cols,mineFreq);
 
-	//make the mines - 1 indicates that this box holds a mine
-	var mineGrid = makeMineGrid(rows,cols,mineFreq);
+	//Do the nearest neighbor search - init this into a function - these are the displayed numbers on the boxes
+	var numGrid = initNumGrid(rows,cols,mineGrid);
 
-	//Do the nearest neighbor search - make this into a function - these are the displayed numbers on the boxes
-	var numGrid = new int[rows, cols];
-	for (var m = 0; m < rows; m++) {
-		for (var n = 0; n < cols; n++){
+	//init the flag grid - 1 indicates that box is flagged
+	var flagGrid = new int[rows, cols]; //zeros for now
+
+	
+}
+
+function Update(){
+	//some object blah blah.GetComponent(Rigidbody).velocity = Vector3(1,0,0);
+	
+}
+
+function initMineGrid(numRows : int, numCols : int, mineFrequency : float){
+	var grid = new int[numRows, numCols];
+
+	for (var i = 0; i < numRows; i++) {
+		for (var j = 0; j < numCols; j++){
+			var seed = Random.Range(0.0f, 1.0f);
+			if (seed < mineFrequency) {
+				grid[i,j] = 1;
+				Debug.Log(i.ToString()+","+j.ToString()+" mined");
+			} 
+			else {
+				grid[i,j] = 0;
+				Debug.Log(i.ToString()+","+j.ToString()+" not mined");
+			}
+		}
+	}
+
+	return grid;
+
+}
+
+function initNumGrid(numRows : int, numCols : int, mineGrid : int[,]){
+	var grid = new int[numRows, numCols];
+	for (var m = 0; m < numRows; m++) {
+		for (var n = 0; n < numCols; n++){
 			var gridSum = 0;
-			// figure out how to check if an element exists and make this a function. 
+			// figure out how to check if an element exists and init this a function. 
 			try{
 				gridSum += mineGrid[m+1,n+1];
 			}
@@ -116,48 +139,30 @@ function Start(){
 
 			}
 
-			numGrid[m,n] = gridSum;
-		}
-	}
+			grid[m,n] = gridSum;
 
-
-	//make the flag grid - 1 indicates that box is flagged
-	var flagGrid = new int[rows, cols];
-	//zeros for now
-
-	
-
-
-}
-
-function Update(){
-	//some object blah blah.GetComponent(Rigidbody).velocity = Vector3(1,0,0);
-	
-}
-
-function makeMineGrid(numRows : int, numCols : int, mineFrequency : float){
-	var grid = new int[numRows, numCols];
-
-	for (var i = 0; i < numRows; i++) {
-		for (var j = 0; j < numCols; j++){
-			var seed = Random.Range(0.0f, 1.0f);
-			if (seed < mineFrequency) {
-				grid[i,j] = 1;
-				Debug.Log(i.ToString()+","+j.ToString()+" mined");
-			} 
-			else {
-				grid[i,j] = 0;
-				Debug.Log(i.ToString()+","+j.ToString()+" not mined");
-			}
 		}
 	}
 
 	return grid;
-
 }
 
-function makeNumGrid(){
-	
+function initCubes(numRows : int, numCols : int, scale : float){
+	for (var ii = 0; ii < numRows; ii++){
+		for (var jj = 0; jj < numCols; jj++){
+			cubes.Add(Instantiate(Resources.Load("FlagCube")));
+			cubes[ii*numRows+jj].transform.position = Vector3(scale*ii,0,scale*jj);
+
+			//should probably init these an array...
+			var textObject = cubes[ii*numRows+jj].transform.GetChild(0);
+			var poleObject = cubes[ii*numRows+jj].transform.GetChild(1);
+			var flagObject = poleObject.transform.GetChild(0);
+			//set texts to index
+			textObject.GetComponent(TextMesh).text = ii.ToString()+","+jj.ToString();
+			flagObject.GetComponent(MeshRenderer).enabled = false;
+			poleObject.GetComponent(MeshRenderer).enabled = false;
+		}
+	}
 }
 
 
