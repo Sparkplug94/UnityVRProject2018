@@ -28,8 +28,8 @@ var flagGrid : int[,];
 function Start(){
 
 	//set the parameters
-	rows = 2;
-	cols = 2;
+	rows = 8;
+	cols = 8;
 	numberOfCubes = rows*cols;
 	scale = 3.0;
 	mineFreq = 0.2;
