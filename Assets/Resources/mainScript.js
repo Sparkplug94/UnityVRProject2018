@@ -60,6 +60,10 @@ function Update(){
  	var jpos : int;
  	var selectedObject : GameObject;
 
+ 	if(mineGrid == flagGrid){
+ 		Debug.Log("You win!");
+ 	}
+
  	if(Physics.Raycast(ray, hit)){
 
       	selectedObject = GameObject.Find(hit.transform.name);
