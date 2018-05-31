@@ -32,11 +32,10 @@ function Start(){
 	cols = 8;
 	numberOfCubes = rows*cols;
 	scale = 3.0;
-	mineFreq = 0.2;
+	mineFreq = 0.20;
 
 	//init the cubes
 	initCubes(rows, cols, scale);
-	
 
 	//init the mines - 1 indicates that this box holds a mine
 	mineGrid = initMineGrid(rows,cols,mineFreq);
@@ -101,7 +100,7 @@ function Update(){
 	 				//destroy the cube
 	 				Destroy(selectedObject);
 	 				//create a bunch of mini cubes at that position
-	 				for (var f = 0; f < 75; f++) {
+	 				for (var f = 0; f < 40; f++) {
 	 					explosionCubes.Add(Instantiate(Resources.Load("ExplosionCube")));
 	 					explosionCubes[f].transform.position = selectedObject.transform.position;
 	 				}
