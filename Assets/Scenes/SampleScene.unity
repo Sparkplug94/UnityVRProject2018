@@ -503,6 +503,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cubes: []
+  explosionCubes: []
   rows: 0
   cols: 0
   mineFreq: 0

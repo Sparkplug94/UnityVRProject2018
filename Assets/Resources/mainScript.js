@@ -11,11 +11,15 @@ var process : System.Diagnostics.Process;
 
 
 var cubes = new List.<GameObject>();
+var explosionCubes = new List.<GameObject>();
 var rows : int;
 var cols : int;
 var mineFreq : float;
 var scale : float;
 var numberOfCubes : int;
+var mineGrid : int[,];
+var numGrid : int[,];
+var flagGrid : int[,];
 
 //this is a C# style "array", use "Count" instead of "Length" and 
 //you can't access an array element until you've created it 
@@ -32,28 +36,16 @@ function Start(){
 
 	//init the cubes
 	initCubes(rows, cols, scale);
-
-
-	//get children of things in cubes array
-	//var flagtextobject = cubes[0].transform.GetChild(0);
-	//get the meshrenderer component of the first child of cubes[0]
-	//var mr = flagtextobject.GetComponent(MeshRenderer);
-	//enable or disable the renderer (hide and show text)
-	//mr.enabled = true;
-	//get the textmesh component of first child of cubes[0] which happens to be the "Text" object
-	//var flagtext = flagtextobject.GetComponent(TextMesh);
-	//change the text property of TextMesh to "byebye"
-	//flagtext.text = "byebye";
 	
 
 	//init the mines - 1 indicates that this box holds a mine
-	var mineGrid = initMineGrid(rows,cols,mineFreq);
+	mineGrid = initMineGrid(rows,cols,mineFreq);
 
 	//Do the nearest neighbor search - init this into a function - these are the displayed numbers on the boxes
-	var numGrid = initNumGrid(rows,cols,mineGrid);
+	numGrid = initNumGrid(rows,cols,mineGrid);
 
 	//init the flag grid - 1 indicates that box is flagged
-	var flagGrid = new int[rows, cols]; //zeros for now
+	flagGrid = new int[rows, cols]; //zeros for now
 
 	
 }
@@ -63,45 +55,82 @@ function Update(){
 	
 	var ray : Ray = Camera.main.ScreenPointToRay(Input.mousePosition);
  	var hit : RaycastHit;
+ 	var index : int;
+ 	var ipos : int;
+ 	var jpos : int;
+ 	var selectedObject : GameObject;
 
  	if(Physics.Raycast(ray, hit)){
 
-      	var selectedObject = GameObject.Find(hit.transform.name);
+      	selectedObject = GameObject.Find(hit.transform.name);
+      	
+      	try{
+      		index =  System.Convert.ToInt16(hit.transform.name);
+      		jpos = index % rows;
+      		ipos = (index - jpos)/rows;
+      		
+      	}
+      	catch(err){
+      		index = -1;
+      	}
+      		//functionality on left click - display text or explode
+	      	if(Input.GetMouseButtonDown(0)){
 
-      	if(Input.GetMouseButtonDown(0)){
+	 			if(mineGrid[ipos,jpos] == 1){
+	 				//if it's a mine, explode
+	 				Debug.Log("Kaboom");
+	 				//explosion
+	 				Debug.Log(selectedObject.transform.position);
+	 				Destroy(selectedObject);
+	 				for (var f = 0; f < 40; f++) {
+	 					explosionCubes.Add(Instantiate(Resources.Load("ExplosionCube")));
+	 					explosionCubes[f].transform.position = selectedObject.transform.position;
+	 				}
+	 				
+	 			}
+	 			else{
+	 				//if not, replace text on box with number in numgrid
+	 				if(index != -1){
+	 					cubes[index].transform.GetChild(0).GetComponent(TextMesh).text = numGrid[ipos,jpos].ToString();
+	 				}
 
- 			Debug.Log(hit.transform.name+" Left Click");
+	 			}
 
-		}
+			}
+			//functionality on right click - flag or unflag box
+			else if(Input.GetMouseButtonDown(1)){
+	 			try{
 
-		else if(Input.GetMouseButtonDown(1)){
+	 				var pole = selectedObject.transform.GetChild(1).GetComponent(MeshRenderer);
+	 				var flag = selectedObject.transform.GetChild(1).GetChild(0).GetComponent(MeshRenderer);
+	 				
+	 				if(pole.enabled == false){
+	 					pole.enabled = true;
+	 					flag.enabled = true;
+	 					if(index != -1){
+	 						//change value in flag grid
+	 						flagGrid[ipos,jpos] = 1;
+	 					}
+	 				}
+	 				else if(pole.enabled == true){
+	 					pole.enabled = false;
+	 					flag.enabled = false;
+	 					if(index != -1){
+	 						//change value in flag grid
+	 						flagGrid[ipos,jpos] = 0;
+	 					}
+	 				}
+	 				else{
 
- 			Debug.Log(hit.transform.name+" Right Click");
- 			try{
- 				
- 				var pole = selectedObject.transform.GetChild(1).GetComponent(MeshRenderer);
- 				var flag = selectedObject.transform.GetChild(1).GetChild(0).GetComponent(MeshRenderer);
- 				
- 				if(pole.enabled == false){
- 					pole.enabled = true;
- 					flag.enabled = true;
- 				}
- 				else if(pole.enabled == true){
- 					pole.enabled = false;
- 					flag.enabled = false;
- 				}
- 				else{
+	 				}
+	 			}
+	 			catch(err){
+	 			}
 
- 				}
- 			}
- 			catch(err){
- 				Debug.Log("Not a Cube"+err);
- 			}
+			}
+			else{
 
-		}
-		else{
-
-		}
+			}
 	 }
 }
 
@@ -197,7 +226,7 @@ function initCubes(numRows : int, numCols : int, scale : float){
 			cubes.Add(Instantiate(Resources.Load("FlagCube")));
 			var index : int = ii*rows+jj;
 			cubes[index].transform.position = Vector3(scale*ii,0,scale*jj);
-			cubes[index].transform.name = "Cube"+index.ToString();
+			cubes[index].transform.name = index.ToString();
 			//should probably init these an array...
 			var textObject = cubes[index].transform.GetChild(0);
 			var poleObject = cubes[index].transform.GetChild(1);
