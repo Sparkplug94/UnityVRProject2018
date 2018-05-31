@@ -61,6 +61,37 @@ function Start(){
 function Update(){
 	//some object blah blah.GetComponent(Rigidbody).velocity = Vector3(1,0,0);
 	
+	var ray : Ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+ 	var hit : RaycastHit;
+
+ 	if(Physics.Raycast(ray, hit)){
+
+      	var selectedObject = GameObject.Find(hit.transform.name);
+
+      	if(Input.GetMouseButtonDown(0)){
+
+ 			Debug.Log(hit.transform.name+" Left Click");
+
+		}
+
+		else if(Input.GetMouseButtonDown(1)){
+
+ 			Debug.Log(hit.transform.name+" Right Click");
+ 			try{
+ 				//enable pole
+ 				selectedObject.transform.GetChild(1).GetComponent(MeshRenderer).enabled = true;
+ 				//enable flag
+ 				selectedObject.transform.GetChild(1).GetChild(0).GetComponent(MeshRenderer).enabled = true;
+ 			}
+ 			catch(err){
+ 				Debug.Log("Not a Cube");
+ 			}
+
+		}
+		else{
+
+		}
+	 }
 }
 
 function initMineGrid(numRows : int, numCols : int, mineFrequency : float){
@@ -71,11 +102,11 @@ function initMineGrid(numRows : int, numCols : int, mineFrequency : float){
 			var seed = Random.Range(0.0f, 1.0f);
 			if (seed < mineFrequency) {
 				grid[i,j] = 1;
-				Debug.Log(i.ToString()+","+j.ToString()+" mined");
+				//Debug.Log(i.ToString()+","+j.ToString()+" mined");
 			} 
 			else {
 				grid[i,j] = 0;
-				Debug.Log(i.ToString()+","+j.ToString()+" not mined");
+				//Debug.Log(i.ToString()+","+j.ToString()+" not mined");
 			}
 		}
 	}
@@ -151,11 +182,12 @@ function initCubes(numRows : int, numCols : int, scale : float){
 	for (var ii = 0; ii < numRows; ii++){
 		for (var jj = 0; jj < numCols; jj++){
 			cubes.Add(Instantiate(Resources.Load("FlagCube")));
-			cubes[ii*numRows+jj].transform.position = Vector3(scale*ii,0,scale*jj);
-
+			var index : int = ii*rows+jj;
+			cubes[index].transform.position = Vector3(scale*ii,0,scale*jj);
+			cubes[index].transform.name = "Cube"+index.ToString();
 			//should probably init these an array...
-			var textObject = cubes[ii*numRows+jj].transform.GetChild(0);
-			var poleObject = cubes[ii*numRows+jj].transform.GetChild(1);
+			var textObject = cubes[index].transform.GetChild(0);
+			var poleObject = cubes[index].transform.GetChild(1);
 			var flagObject = poleObject.transform.GetChild(0);
 			//set texts to index
 			textObject.GetComponent(TextMesh).text = ii.ToString()+","+jj.ToString();
