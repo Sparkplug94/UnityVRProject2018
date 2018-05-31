@@ -97,7 +97,7 @@ function Update(){
 	 				//destroy the cube
 	 				Destroy(selectedObject);
 	 				//create a bunch of mini cubes at that position
-	 				for (var f = 0; f < 40; f++) {
+	 				for (var f = 0; f < 75; f++) {
 	 					explosionCubes.Add(Instantiate(Resources.Load("ExplosionCube")));
 	 					explosionCubes[f].transform.position = selectedObject.transform.position;
 	 				}
@@ -230,7 +230,7 @@ function initCubes(numRows : int, numCols : int, scale : float){
 			var poleObject = cubes[index].transform.GetChild(1);
 			var flagObject = poleObject.transform.GetChild(0);
 			//set texts to index
-			textObject.GetComponent(TextMesh).text = ii.ToString()+","+jj.ToString();
+			textObject.GetComponent(TextMesh).text = "";
 			flagObject.GetComponent(MeshRenderer).enabled = false;
 			poleObject.GetComponent(MeshRenderer).enabled = false;
 		}
