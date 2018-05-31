@@ -28,11 +28,11 @@ var flagGrid : int[,];
 function Start(){
 
 	//set the parameters
-	rows = 8;
-	cols = 8;
+	rows = 2;
+	cols = 2;
 	numberOfCubes = rows*cols;
 	scale = 3.0;
-	mineFreq = 0.20;
+	mineFreq = 0.2;
 
 	//init the cubes
 	initCubes(rows, cols, scale);
@@ -60,6 +60,10 @@ function Update(){
  	var ipos : int;
  	var jpos : int;
  	var selectedObject : GameObject;
+
+ 	if(Input.GetKeyDown(KeyCode.R)){
+ 		Application.LoadLevel(0); 
+ 	}
 
  	
 
@@ -250,6 +254,12 @@ function isSolved(numRows : int, numCols : int, mines : int[,], flags : int[,]){
 		}
 	}
 	Debug.Log("You win!");
+	Instantiate(Resources.Load("YouWinText"));
+	for (var jj = 0; jj < 10; jj++){
+		Instantiate(Resources.Load("WinSphereGreen"));
+		Instantiate(Resources.Load("WinSphereHotPink"));
+		Instantiate(Resources.Load("WinSphereYellow"));
+	}
 	return true;
 }
 
