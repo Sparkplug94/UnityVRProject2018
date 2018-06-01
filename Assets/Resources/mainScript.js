@@ -55,7 +55,7 @@ function Update(){
 	
 	isSolved(rows, cols, mineGrid, flagGrid);
 
-	var ray : Ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+	var ray : Ray = new Ray(GameObject.Find("Cylinder").transform.position, Camera.main.transform.forward);
  	var hit : RaycastHit;
  	var index : int;
  	var ipos : int;
@@ -78,6 +78,8 @@ function Update(){
  	
 
  	if(Physics.Raycast(ray, hit)){
+
+ 		Debug.Log(hit.transform.name);
 
       	selectedObject = GameObject.Find(hit.transform.name);
 
