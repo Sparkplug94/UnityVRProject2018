@@ -27,6 +27,7 @@ var flagGrid : int[,];
 
 function Start(){
 
+	//Debug.Log(slider.value);
 	//set the parameters
 	rows = 6;
 	cols = 6;
@@ -95,6 +96,7 @@ function Update(){
       		jpos = index % rows;
       		ipos = (index - jpos)/rows;
       	}
+
       	else{
       		//Debug.Log("not an object we care about");
       		index = -1;
