@@ -28,8 +28,8 @@ var flagGrid : int[,];
 function Start(){
 
 	//set the parameters
-	rows = 8;
-	cols = 8;
+	rows = 6;
+	cols = 6;
 	numberOfCubes = rows*cols;
 	scale = 3.0;
 	mineFreq = 0.2;
@@ -64,6 +64,15 @@ function Update(){
  	if(Input.GetKeyDown(KeyCode.R)){
  		Application.LoadLevel(0); 
  	}
+ 	if(Input.GetKeyDown(KeyCode.Q)){
+		Instantiate(Resources.Load("WinSphereGreen"));
+		Instantiate(Resources.Load("WinSphereHotPink"));
+		Instantiate(Resources.Load("WinSphereYellow"));
+		Instantiate(Resources.Load("WinSphereGreen"));
+		Instantiate(Resources.Load("WinSphereHotPink"));
+		Instantiate(Resources.Load("WinSphereYellow"));
+	}
+ 	
 
  	
 
