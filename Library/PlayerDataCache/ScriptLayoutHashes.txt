@@ -1,6 +1,6 @@
 OSXStandalone
 PlayerPath?
-/Users/dsblack/Dan's Starter Project/VRMineSweeper.app
+/Users/dsblack/Dan's Starter Project/FPMineSweeper.app
 SceneListBegin?
 Assets/Scenes/SampleScene.unity
 SceneListEnd?
