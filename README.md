@@ -1,6 +1,10 @@
 # UnityVRProject2018
 Final project for EE267 Stanford 2018
 
+Contributors:
+1. Dylan Black
+2. Abhishek Roushan
+
 The repository is organized as a Unity Project, maintaining the hirearchy of Assets, Resources and Library settings.
 The details are as follows:
 
